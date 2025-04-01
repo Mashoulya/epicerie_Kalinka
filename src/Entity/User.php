@@ -16,10 +16,10 @@ class User implements PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: false)]
     private ?string $first_name = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 100, nullable: false)]
     private ?string $last_name = null;
 
     #[ORM\Column(length: 20)]
@@ -78,6 +78,11 @@ class User implements PasswordAuthenticatedUserInterface
         $this->last_name = $last_name;
 
         return $this;
+    }
+
+    public function getFullName(): string
+    {
+        return $this->first_name . ' ' . $this->last_name;
     }
 
     public function getTel(): ?string

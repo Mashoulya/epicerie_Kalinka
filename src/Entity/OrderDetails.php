@@ -95,4 +95,9 @@ class OrderDetails
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return $this->product->getName() . ' - ' . $this->quantity . ' pcs';  
+    }
 }
