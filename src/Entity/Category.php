@@ -18,8 +18,8 @@ class Category
     #[ORM\Column(length: 100)]
     private ?string $name = null;
 
-    #[ORM\Column]
-    private ?bool $active = null;
+    #[ORM\Column(type: 'boolean')]
+    private bool $active = true;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
@@ -36,6 +36,9 @@ class Category
     public function __construct()
     {
         $this->products = new ArrayCollection();
+        $this->active = true;
+        $this->created_at = new \DateTimeImmutable();
+        $this->updated_at = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -55,7 +58,7 @@ class Category
         return $this;
     }
 
-    public function isActive(): ?bool
+    public function isActive(): bool
     {
         return $this->active;
     }

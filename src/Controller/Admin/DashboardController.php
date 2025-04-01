@@ -3,7 +3,12 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use App\Entity\Order;
+use App\Entity\Product;
+use App\Entity\Category;
+use App\Entity\OrderDetails;
 use Symfony\Component\HttpFoundation\Response;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
@@ -15,7 +20,6 @@ class DashboardController extends AbstractDashboardController
 {
     public function index(): Response
     {
-
         $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
         return $this->redirect($adminUrlGenerator
         ->setController(UserCrudController::class)
@@ -30,10 +34,18 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        // yield MenuItem::section('E-commerce');
-    
-        yield MenuItem::linkToCrud('Users', 'fas fa-users', User::class)
-            ->setPermission('ROLE_ADMIN');
+        return [
+            MenuItem::linkToDashboard('Dashboard', 'fa fa-home'),
+            // MenuItem::section('E-commerce'),
+        
+            MenuItem::linkToCrud('Users', 'fas fa-users', User::class),
+            // ->setPermission('ROLE_ADMIN');
+            MenuItem::linkToCrud('Categories', 'fas fa-tags', Category::class),
+            // ->setPermission('ROLE_ADMIN');
+            MenuItem::linkToCrud('Products', 'fas fa-box', Product::class),
+            // ->setPermission('ROLE_ADMIN');
+            MenuItem::linkToCrud('Orders', 'fas fa-shopping-cart', Order::class),
+            // ->setPermission('ROLE_ADMIN');
+           ];
     }
 }
