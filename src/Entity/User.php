@@ -85,6 +85,11 @@ class User implements PasswordAuthenticatedUserInterface
         return $this->first_name . ' ' . $this->last_name;
     }
 
+    public function __toString()
+    {
+        return $this->getFullName();
+    }
+
     public function getTel(): ?string
     {
         return $this->tel;

@@ -58,6 +58,11 @@ class Category
         return $this;
     }
 
+    public function __toString()
+    {
+        return $this->name;
+    }
+
     public function isActive(): bool
     {
         return $this->active;

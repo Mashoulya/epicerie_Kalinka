@@ -3,9 +3,10 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class UserCrudController extends AbstractCrudController
@@ -13,6 +14,13 @@ class UserCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return User::class;
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setEntityLabelInSingular('Utilisateur')
+            ->setEntityLabelInPlural('Utilisateurs');
     }
 
     public function configureFields(string $pageName): iterable
@@ -31,11 +39,14 @@ class UserCrudController extends AbstractCrudController
                 TextField::new('tel', 'Téléphone')
                 ->setLabel('Téléphone')
                 ->setHelp('Téléphone de l\'utilisateur'),
-            TextField::new('roles', 'Rôles')
+            ChoiceField::new('roles', 'Rôles')
                 ->setLabel('Rôles')
-                ->setHelp('Rôles de l\'utilisateur')
-                ->hideOnIndex(),
-           
+                ->setHelp('Sélectionner les rôles de l\'utilisateur')
+                ->setChoices([
+                    'Administrateur' => 'ROLE_ADMIN',
+                    'Utilisateur' => 'ROLE_USER',
+                ])
+                ->allowMultipleChoices(),
         ];
     }
 

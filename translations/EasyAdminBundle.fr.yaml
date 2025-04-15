@@ -1,0 +1,22 @@
+action.new: 'Ajouter %entity_label_singular%'
+action.edit: 'Modifier'
+action.show: 'Voir'
+action.delete: 'Supprimer'
+action.search: 'Rechercher'
+action.save: 'Enregistrer les modifications'
+action.cancel: 'Annuler'
+action.list: 'Retour à la liste'
+
+label.form.empty_value: 'Aucune valeur'
+label.true: 'Oui'
+label.false: 'Non'
+
+# Entités
+label.entity: 'Entité'
+label.entities: 'Entités'
+
+# Paginaton
+paginator.previous: 'Précédent'
+paginator.next: 'Suivant'
+paginator.first: 'Premier'
+paginator.last: 'Dernier'

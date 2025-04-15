@@ -35,16 +35,15 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         return [
-            MenuItem::linkToDashboard('Dashboard', 'fa fa-home'),
+            MenuItem::linkToDashboard('Tableau de bord', 'fa fa-home'),
             // MenuItem::section('E-commerce'),
-        
-            MenuItem::linkToCrud('Users', 'fas fa-users', User::class),
+            MenuItem::linkToCrud('Utilisateurs', 'fas fa-users', User::class),
             // ->setPermission('ROLE_ADMIN');
-            MenuItem::linkToCrud('Categories', 'fas fa-tags', Category::class),
+            MenuItem::linkToCrud('Catégories de produits', 'fas fa-tags', Category::class),
             // ->setPermission('ROLE_ADMIN');
-            MenuItem::linkToCrud('Products', 'fas fa-box', Product::class),
+            MenuItem::linkToCrud('Produits', 'fas fa-box', Product::class),
             // ->setPermission('ROLE_ADMIN');
-            MenuItem::linkToCrud('Orders', 'fas fa-shopping-cart', Order::class),
+            MenuItem::linkToCrud('Commandes', 'fas fa-shopping-cart', Order::class),
             // ->setPermission('ROLE_ADMIN');
            ];
     }

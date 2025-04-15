@@ -26,6 +26,9 @@ class Order
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updated_at = null;
+
     #[ORM\ManyToOne(inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
@@ -33,12 +36,14 @@ class Order
     /**
      * @var Collection<int, OrderDetails>
      */
-    #[ORM\OneToMany(targetEntity: OrderDetails::class, mappedBy: 'userOrder', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: OrderDetails::class, mappedBy: 'userOrder', cascade: ['persist'], orphanRemoval: true)]
     private Collection $orderDetails;
 
     public function __construct()
     {
         $this->orderDetails = new ArrayCollection();
+        $this->created_at = new \DateTimeImmutable();
+        $this->updated_at = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -58,7 +63,7 @@ class Order
         return $this;
     }
 
-    public function isPaid(): ?bool
+    public function getPaid(): ?bool
     {
         return $this->paid;
     }
@@ -78,6 +83,17 @@ class Order
     public function setCreatedAt(\DateTimeImmutable $created_at): static
     {
         $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updated_at;
+    }
+    public function setUpdatedAt(\DateTimeImmutable $updated_at): static
+    {
+        $this->updated_at = $updated_at;
 
         return $this;
     }
