@@ -33,7 +33,7 @@ security:
                 path: /
                 # by default, the feature is enabled by checking a checkbox in the
                 # login form, uncomment the following line to always enable it.
-                #always_remember_me: true
+                always_remember_me: false
                 # where to redirect after logout
                 # target: app_any_route
 
