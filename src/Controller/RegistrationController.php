@@ -3,19 +3,21 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\RegistrationFormType;
-use App\Security\AppCustomAuthenticator;
 use App\Security\EmailVerifier;
+use App\Service\SendEmailService;
+use App\Form\RegistrationFormType;
+use Symfony\Component\Mime\Address;
+use App\Security\AppCustomAuthenticator;
+use App\Service\JWTService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
@@ -25,7 +27,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, JWTService $jwt, SendEmailService $email): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -41,13 +43,27 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
+            // GENERER LE TOKEN JWT
+            // header
+            $header = [
+                'alg' => 'HS256',
+                'typ' => 'JWT'
+            ];
+            // payload
+            $payload = [
+                'user_id' => $user->getId(),
+            ];
+
+            $token = $jwt->generate($header, $payload, $this->getParameter('app.jwtsecret'), 86400);
+
             // generate a signed url and email it to the user
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
                     ->from(new Address('gemouu@gmail.com', 'Maria'))
                     ->to((string) $user->getEmail())
                     ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
+                    ->htmlTemplate('security/login.html.twig')
+                    ->context(['user' => $user, 'token' => $token])
             );
 
            

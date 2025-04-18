@@ -5,7 +5,7 @@ namespace App\Service;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
-class SendMailService 
+class SendEmailService 
 {
     private $mailer;
 
@@ -26,7 +26,7 @@ class SendMailService
             ->from($from)
             ->to($to)
             ->subject($subject)
-            ->htmlTemplate("email/$template.html.twig")
+            ->htmlTemplate("registration/$template.html.twig")
             ->context($context);
 
         // on envoie le mail
