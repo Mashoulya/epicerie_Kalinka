@@ -7,4 +7,10 @@ import './bootstrap.js';
  */
 import './styles/app.css';
 
+import { createApp } from 'vue';
+
+createApp({
+  template: `<h1>Test Vue.js</h1>`
+}).mount('#app');
+
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');

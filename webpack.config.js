@@ -72,6 +72,9 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
+
+    // enable Vue.js loader
+    .enableVueLoader()
 ;
 
 module.exports = Encore.getWebpackConfig();

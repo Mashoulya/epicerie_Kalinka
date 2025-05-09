@@ -73,49 +73,49 @@ class ResetPasswordController extends AbstractController
      * Validates and process the reset URL that the user clicked in their email.
      */
     
-    #[Route('/reset/{token}', name: 'app_reset_password')]
-    public function reset(Request $request, UserPasswordHasherInterface $passwordHasher, TranslatorInterface $translator, string $token): Response
-    {
-        dump('Token reçu :', $token);
+#[Route('/reset/{token}', name: 'app_reset_password')]
+public function reset(Request $request, UserPasswordHasherInterface $passwordHasher, TranslatorInterface $translator, string $token): Response
+{
+      dump('Token reçu :', $token);
 
-        try {
-            /** @var User $user */
-            $user = $this->resetPasswordHelper->validateTokenAndFetchUser($token);
-            dump('Utilisateur trouvé :', $user);
-        } catch (ResetPasswordExceptionInterface $e) {
-            dump('Erreur de validation du token :', $e->getMessage());
-            $this->addFlash('reset_password_error', sprintf(
-                '%s - %s',
-                $translator->trans(ResetPasswordExceptionInterface::MESSAGE_PROBLEM_VALIDATE, [], 'ResetPasswordBundle'),
-                $translator->trans($e->getReason(), [], 'ResetPasswordBundle')
-            ));
+    try {
+        /** @var User $user */
+        $user = $this->resetPasswordHelper->validateTokenAndFetchUser($token);
+dump('Utilisateur trouvé :', $user);
+    } catch (ResetPasswordExceptionInterface $e) {
+dump('Erreur de validation du token :', $e->getMessage());
+        $this->addFlash('reset_password_error', sprintf(
+            '%s - %s',
+            $translator->trans(ResetPasswordExceptionInterface::MESSAGE_PROBLEM_VALIDATE, [], 'ResetPasswordBundle'),
+            $translator->trans($e->getReason(), [], 'ResetPasswordBundle')
+        ));
 
-            return $this->redirectToRoute('app_forgot_password_request');
-        }
+        return $this->redirectToRoute('app_forgot_password_request');
+    }
 
-        // Le token est valide, affichage du formulaire
-        $form = $this->createForm(ChangePasswordFormType::class);
-        $form->handleRequest($request);
+    // Le token est valide, affichage du formulaire
+    $form = $this->createForm(ChangePasswordFormType::class);
+    $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->resetPasswordHelper->removeResetRequest($token);
+    if ($form->isSubmitted() && $form->isValid()) {
+        $this->resetPasswordHelper->removeResetRequest($token);
 
-            /** @var string $plainPassword */
-            $plainPassword = $form->get('plainPassword')->getData();
+        /** @var string $plainPassword */
+        $plainPassword = $form->get('plainPassword')->getData();
 
-            $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
-            $this->entityManager->flush();
+        $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
+        $this->entityManager->flush();
 
-            $this->cleanSessionAfterReset();
+        $this->cleanSessionAfterReset();
 
-            $this->addFlash('success', 'Votre mot de passe a bien été modifié.');
+        $this->addFlash('success', 'Votre mot de passe a bien été modifié.');
 
-            return $this->redirectToRoute('app_home');
-        }
+        return $this->redirectToRoute('app_home');
+    }
 
-        return $this->render('reset_password/reset.html.twig', [
-            'resetForm' => $form,
-        ]);
+    return $this->render('reset_password/reset.html.twig', [
+        'resetForm' => $form,
+    ]);
     }
 
     private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer, TranslatorInterface $translator): RedirectResponse
@@ -126,17 +126,19 @@ class ResetPasswordController extends AbstractController
 
         // Do not reveal whether a user account was found or not.
         if (!$user) {
-            $this->addFlash('reset_password_error', 'Aucun utilisateur trouvé pour cet e-mail.');
+$this->addFlash('reset_password_error', 'Aucun utilisateur trouvé pour cet e-mail.');
             return $this->redirectToRoute('app_forgot_password_request');
         }
 
         try {
+            // Ajout d'un dump pour vérifier le token généré
             $resetToken = $this->resetPasswordHelper->generateResetToken($user);
+            dump('Token généré :', $resetToken);
         } catch (ResetPasswordExceptionInterface $e) {
             $this->addFlash('reset_password_error', sprintf(
-                '%s - %s',
-                $translator->trans(ResetPasswordExceptionInterface::MESSAGE_PROBLEM_HANDLE, [], 'ResetPasswordBundle'),
-                $translator->trans($e->getReason(), [], 'ResetPasswordBundle')
+            '%s - %s',
+            $translator->trans(ResetPasswordExceptionInterface::MESSAGE_PROBLEM_HANDLE, [], 'ResetPasswordBundle'),
+            $translator->trans($e->getReason(), [], 'ResetPasswordBundle')
             ));
 
             return $this->redirectToRoute('app_forgot_password_request');
@@ -153,7 +155,7 @@ class ResetPasswordController extends AbstractController
 
         $mailer->send($email);
 
-        $this->setTokenObjectInSession($resetToken);
+                $this->setTokenObjectInSession($resetToken);
 
         return $this->redirectToRoute('app_check_email');
     }
