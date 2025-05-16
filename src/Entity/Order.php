@@ -21,7 +21,7 @@ class Order
     private ?string $total_price = null;
 
     #[ORM\Column]
-    private ?bool $paid = null;
+    private ?bool $isPaid = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
@@ -63,14 +63,14 @@ class Order
         return $this;
     }
 
-    public function getPaid(): ?bool
+    public function isPaid(): ?bool
     {
-        return $this->paid;
+        return $this->isPaid;
     }
 
-    public function setPaid(bool $paid): static
+    public function setIsPaid(bool $isPaid): static
     {
-        $this->paid = $paid;
+        $this->isPaid = $isPaid;
 
         return $this;
     }

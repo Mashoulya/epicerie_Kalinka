@@ -23,19 +23,19 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/user/{id}', name: 'app_user_show')]
+    #[Route('/my-profile', name: 'app_profile_show')]
 
-    public function show(int $id, UserRepository $userRepo): Response
+    public function show(): Response
     {
 
-        $user = $userRepo->findOneBy(['id' => $id]);
+        $user = $this->getUser();
         if (!$user) {
-            throw $this->createNotFoundException('L\'utilisateur n\'existe pas');
+           throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à cette page');
         }
+       
         return $this->render('user/showUser.html.twig', [
             'controller_name' => 'UserController',
             'user' => $user,
-            'id' => $id,
         ]);
     }
 }

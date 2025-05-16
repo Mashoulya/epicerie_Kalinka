@@ -33,7 +33,7 @@ class OrderCrudController extends AbstractCrudController
             IdField::new('id')->hideOnForm(),
             MoneyField::new('total_price')
                 ->setCurrency('EUR'),
-            BooleanField::new('paid')
+            BooleanField::new('isPaid')
                 ->setLabel('Payé')
                 ->setHelp('Cocher pour marquer la commande comme payée'),
             CollectionField::new('orderDetails', 'Produits achetés')
