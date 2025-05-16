@@ -11,9 +11,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 
 class ProductCrudController extends AbstractCrudController
 {
+    public const PRODUCTS_BASE_PATH = 'uploads/images/products';
+    public const PRODUCTS_UPLOAD_DIR = 'public/uploads/images/products';
+    
     public static function getEntityFqcn(): string
     {
         return Product::class;
@@ -32,9 +36,14 @@ class ProductCrudController extends AbstractCrudController
             IdField::new('id')->hideOnForm(),
             TextField::new('name'),
             TextEditorField::new('description'),
-            TextField::new('image')
-                ->setLabel('Image URL')
-                ->setHelp('URL de l\'image du produit'),
+            // TextField::new('image')
+            //     ->setLabel('Image')
+            //     ->setHelp('URL de l\'image du produit'),
+            ImageField::new('image')
+                ->setBasePath(self::PRODUCTS_BASE_PATH)
+                ->setUploadDir(self::PRODUCTS_UPLOAD_DIR)
+                ->setLabel('Image')
+                ->setHelp('Télécharger l\'image du produit'),
             TextField::new('price')
                 ->setLabel('Prix')
                 ->setHelp('Prix du produit'),

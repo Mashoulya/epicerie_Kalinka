@@ -8,10 +8,17 @@ use App\Entity\Category;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ProductFixtures extends Fixture implements DependentFixtureInterface
 {
+    private SluggerInterface $slugger;
+
+    public function __construct(SluggerInterface $slugger)
+    {
+        $this->slugger = $slugger;
+    }
+
     public function load(ObjectManager $manager): void
     {
        $faker = Factory::create('fr_FR');
@@ -25,6 +32,9 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 ->setActive($faker->boolean())
                 ->setCreatedAt(new \DateTimeImmutable())
                 ->setUpdatedAt(new \DateTimeImmutable());
+
+            $slug = $this->slugger->slug($product->getName())->lower()->toString();
+            $product->setSlug($slug);
 
             // associer une catégorie aléatoire
             $categoryIndex = rand(0, 9);

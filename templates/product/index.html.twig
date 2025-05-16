@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProductController!{% endblock %}
+
+{% block body %}
+
+<h1>Tous les produits</h1>
+
+{% for product in products %}
+<ul>
+    <li>{{ product.name }}</li>
+    <li>{{ product.description }}</li>
+    <li>{{ product.price }}</li>
+    <li>{{ product.stock }}</li>
+    <li>{{ product.active }}</li>
+    <li>{{ product.createdAt|date('d/m/Y H:i:s') }}</li>
+    <li>{{ product.updatedAt|date('d/m/Y H:i:s') }}</li>
+    <li>{{ product.category.name }}</li>
+
+</ul>
+{% endfor %}
+
+{% if products is empty %}
+    <p>Aucun produit trouvé.</p>
+{% endif %}
+
+
+
+{% endblock %}
