@@ -6,7 +6,6 @@ use App\Entity\Order;
 use App\Entity\OrderDetails;
 use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -60,9 +59,17 @@ final class OrderController extends AbstractController
         // on parcourt le panier pour créer les détails de la commande
         foreach ($cart as $item=> $quantity) {
             $product = $productRepository->find($item);
-            if (!$product) {
+            if (!$product || $product->getStock() === 0) {
+                unset($cart[$item]);
+                $name = $product ? $product->getName() : 'inconnu';
+                $this->addFlash('error', "Le produit {$name} est en rupture");
                 continue;
             }
+            if ($product->getStock() < $quantity) {
+                $this->addFlash('error', "La quantité demandée pour le produit {$product->getName()} est supérieure à la quantité en stock");
+                continue;
+            }
+
             $orderDetails = new OrderDetails();
             $orderDetails->setProduct($product);
             $orderDetails->setQuantity($quantity);
@@ -77,6 +84,13 @@ final class OrderController extends AbstractController
             // mise à jour du stock
             $newStock = $product->getStock() - $quantity;
             $product->setStock($newStock);
+        }
+
+        $session->set('cart', $cart);
+
+        if (count($orders->getOrderDetails()) === 0) {
+            $this->addFlash('error', 'Aucun produit dans le panier');
+            return $this->redirectToRoute('app_index'); // à définir la route
         }
 
         $orders->setIsPaid(false);
