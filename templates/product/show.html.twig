@@ -4,26 +4,6 @@
 
 {% block body %}
 
-<h1>Fiche produit</h1>
-
-<img src="{{ asset('uploads/images/products/' ~ product.image ) }}" alt="imageProduit" />
-
-<ul>
-    <li>{{ product.name }}</li>
-    <li>{{ product.description }}</li>
-    <li>{{ product.price }}</li>
-    <li>{{ product.stock }}</li>
-    <li>{{ product.active }}</li>
-    <li>{{ product.createdAt|date('d/m/Y H:i:s') }}</li>
-    <li>{{ product.updatedAt|date('d/m/Y H:i:s') }}</li>
-    <li>{{ product.category.name }}</li>
-
-</ul>
-
-{% if product is empty %}
-    <p>Aucun produit trouvé.</p>
-{% endif %}
-
-
+<div id="product-data" data-product='{{ product|json_encode|e('html_attr') }}'></div>
 
 {% endblock %}

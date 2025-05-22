@@ -28,9 +28,22 @@ final class ProductController extends AbstractController
         if (!$product) {
             throw $this->createNotFoundException('Le produit n\'existe pas');
         }
+        $productData = [
+        'name' => $product->getName(),
+        'description' => $product->getDescription(),
+        'price' => $product->getPrice(),
+        'stock' => $product->getStock(),
+        'active' => $product->isActive(),
+        'createdAt' => $product->getCreatedAt()->format('Y-m-d H:i:s'),
+        'updatedAt' => $product->getUpdatedAt()->format('Y-m-d H:i:s'),
+        'category' => [
+        'name' => $product->getCategory()?->getName() ?? 'Aucune',
+        ],
+        'image' => $product->getImage(),
+    ];
         return $this->render('product/show.html.twig', [
             'controller_name' => 'ProductController',
-            'product' => $product,
+            'product' => $productData,
             'slug' => $slug,
         ]);
     }
